@@ -1,19 +1,35 @@
 {
   "name": "arcpy-mcp",
   "version": "0.1.0",
-  "description": "Arcpy Mcp plugin",
+  "description": "Use a private Windows ArcGIS Pro installation from Codex on macOS.",
   "author": {
-    "name": "Local developer"
+    "name": "zhouning"
   },
+  "repository": "https://github.com/zhouning/codex-arcpy-mcp-plugin",
+  "license": "Proprietary",
+  "keywords": [
+    "arcpy",
+    "arcgis-pro",
+    "gis",
+    "mcp"
+  ],
   "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Arcpy Mcp",
-    "shortDescription": "Use Arcpy Mcp in Codex.",
-    "longDescription": "Arcpy Mcp adds a local Codex plugin scaffold.",
-    "developerName": "Local developer",
+    "displayName": "ArcPy MCP",
+    "shortDescription": "Run private ArcPy workflows from Codex.",
+    "longDescription": "Securely upload GIS data, run allowlisted ArcPy jobs on a Windows ArcGIS Pro host, and download verified results.",
+    "developerName": "zhouning",
     "category": "Productivity",
-    "capabilities": [],
-    "defaultPrompt": "Help me use Arcpy Mcp."
-  },
-  "mcpServers": "./.mcp.json"
+    "capabilities": [
+      "Remote GIS processing",
+      "Artifact transfer",
+      "Asynchronous ArcPy jobs"
+    ],
+    "defaultPrompt": [
+      "Inspect this GIS dataset with ArcPy.",
+      "Run an ArcPy buffer and download the result.",
+      "Check the Windows ArcPy service status."
+    ]
+  }
 }

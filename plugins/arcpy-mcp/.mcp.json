@@ -1,3 +1,9 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "arcpy": {
+      "type": "http",
+      "url": "https://192.168.25.228:8765/mcp",
+      "bearer_token_env_var": "ARCPY_MCP_TOKEN"
+    }
+  }
 }
