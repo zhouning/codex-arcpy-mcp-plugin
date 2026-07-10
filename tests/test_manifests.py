@@ -29,3 +29,31 @@ def test_mcp_uses_fixed_ip_and_environment_token():
         "url": "https://192.168.25.228:8765/mcp",
         "bearer_token_env_var": "ARCPY_MCP_TOKEN",
     }
+
+
+def test_skill_contains_required_safety_and_workflow_rules():
+    skill = (PLUGIN / "skills/arcpy-mcp/SKILL.md").read_text(encoding="utf-8")
+
+    required = [
+        "health_check",
+        "get_capabilities",
+        "create_upload",
+        "get_upload_status",
+        "renew_upload",
+        "complete_upload",
+        "inspect_dataset",
+        "search_tools",
+        "describe_tool",
+        "submit_job",
+        "get_job",
+        "cancel_job",
+        "get_job_log",
+        "create_download",
+        "ARCPY_MCP_TOKEN",
+        "Never send a Windows absolute path",
+        "Never request arbitrary Python execution",
+        "artifact-relative paths",
+        "CPU deep-learning",
+    ]
+    for phrase in required:
+        assert phrase in skill
