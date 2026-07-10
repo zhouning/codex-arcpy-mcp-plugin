@@ -51,6 +51,10 @@ def test_verify_script_checks_each_layer_without_dumping_secrets():
         "launchctl setenv ARCPY_MCP_TOKEN",
         "security verify-cert",
         "https://192.168.25.228:8765/healthz",
+        "https://192.168.25.228:8765/mcp",
+        "Authorization: Bearer %s",
+        '"method":"initialize"',
+        "--config <(printf",
         "codex plugin marketplace list",
         "codex plugin list",
         "codex mcp list",
@@ -66,6 +70,7 @@ def test_verify_script_checks_each_layer_without_dumping_secrets():
         "set -x",
         "printenv",
         "launchctl getenv",
+        '--header "Authorization: Bearer $token"',
         "\nenv\n",
     ]
     for phrase in forbidden:
