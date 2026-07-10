@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).parents[1]
 PLUGIN = ROOT / "plugins/arcpy-mcp"
 CONFIGURE = PLUGIN / "scripts/configure-macos.sh"
+VERIFY = PLUGIN / "scripts/verify-connection.sh"
 
 
 def test_ca_asset_contains_only_a_public_certificate():
@@ -37,6 +38,35 @@ def test_configure_script_uses_keychain_launchagent_and_private_marketplace():
         "set -x",
         "ca.key",
         "server.key",
+    ]
+    for phrase in forbidden:
+        assert phrase not in text
+
+
+def test_verify_script_checks_each_layer_without_dumping_secrets():
+    text = VERIFY.read_text(encoding="utf-8")
+
+    required = [
+        "security find-generic-password",
+        "launchctl setenv ARCPY_MCP_TOKEN",
+        "security verify-cert",
+        "https://192.168.25.228:8765/healthz",
+        "codex plugin marketplace list",
+        "codex plugin list",
+        "codex mcp list",
+        "arcpy-mcp",
+        "zhouning-arcpy",
+    ]
+    for phrase in required:
+        assert phrase in text
+
+    forbidden = [
+        'echo "$TOKEN"',
+        'echo "$token"',
+        "set -x",
+        "printenv",
+        "launchctl getenv",
+        "\nenv\n",
     ]
     for phrase in forbidden:
         assert phrase not in text
