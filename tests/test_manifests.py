@@ -57,3 +57,22 @@ def test_skill_contains_required_safety_and_workflow_rules():
     ]
     for phrase in required:
         assert phrase in skill
+
+
+def test_readme_documents_install_update_rotation_and_removal():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    required = [
+        "git clone git@github.com:zhouning/codex-arcpy-mcp-plugin.git",
+        "./codex-arcpy-mcp-plugin/plugins/arcpy-mcp/scripts/configure-macos.sh",
+        "./codex-arcpy-mcp-plugin/plugins/arcpy-mcp/scripts/verify-connection.sh",
+        "codex plugin add arcpy-mcp@zhouning-arcpy",
+        "codex plugin marketplace upgrade zhouning-arcpy",
+        "configure-macos.sh --rotate-token",
+        "codex plugin remove arcpy-mcp@zhouning-arcpy",
+        "codex plugin marketplace remove zhouning-arcpy",
+        "https://192.168.25.228:8765/mcp",
+        "macOS acceptance is pending",
+    ]
+    for phrase in required:
+        assert phrase in readme
