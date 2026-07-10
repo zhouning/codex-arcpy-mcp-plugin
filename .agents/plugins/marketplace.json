@@ -1,0 +1,20 @@
+{
+  "name": "zhouning-arcpy",
+  "interface": {
+    "displayName": "Zhouning Arcpy"
+  },
+  "plugins": [
+    {
+      "name": "arcpy-mcp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/arcpy-mcp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

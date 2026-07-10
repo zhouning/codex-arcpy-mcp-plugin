@@ -1,0 +1,19 @@
+{
+  "name": "arcpy-mcp",
+  "version": "0.1.0",
+  "description": "Arcpy Mcp plugin",
+  "author": {
+    "name": "Local developer"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Arcpy Mcp",
+    "shortDescription": "Use Arcpy Mcp in Codex.",
+    "longDescription": "Arcpy Mcp adds a local Codex plugin scaffold.",
+    "developerName": "Local developer",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Help me use Arcpy Mcp."
+  },
+  "mcpServers": "./.mcp.json"
+}
