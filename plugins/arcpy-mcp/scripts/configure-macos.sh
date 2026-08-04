@@ -111,7 +111,7 @@ ca_present() {
 
   security find-certificate -a -Z "$LOGIN_KEYCHAIN" 2>/dev/null \
     | tr '[:lower:]' '[:upper:]' \
-    | grep -Fq "$fingerprint"
+    | grep -F "$fingerprint" >/dev/null
 }
 
 refresh_ca() {

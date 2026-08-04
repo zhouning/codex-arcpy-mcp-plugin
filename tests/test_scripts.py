@@ -61,6 +61,7 @@ def test_configure_script_refreshes_ca_without_touching_token():
         "security add-trusted-cert",
         "refresh_ca",
         "refresh_plugin",
+        'grep -F "$fingerprint" >/dev/null',
     ]
     for phrase in required:
         assert phrase in text
@@ -87,6 +88,7 @@ def test_configure_script_refreshes_ca_without_touching_token():
     assert "refresh_plugin" in refresh_branch
     assert "store_token" not in refresh_branch
     assert "install_token_loader" not in refresh_branch
+    assert 'grep -Fq "$fingerprint"' not in text
 
 
 def test_verify_script_checks_each_layer_without_dumping_secrets():
