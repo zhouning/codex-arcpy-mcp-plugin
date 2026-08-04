@@ -16,8 +16,8 @@ done
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 CA_CERT="$PLUGIN_DIR/assets/arcpy-mcp-ca.crt"
-HEALTH_URL="https://192.168.25.228:8765/healthz"
-MCP_URL="https://192.168.25.228:8765/mcp"
+HEALTH_URL="https://192.168.50.170:8765/healthz"
+MCP_URL="https://192.168.50.170:8765/mcp"
 MCP_INITIALIZE='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"arcpy-mcp-verify","version":"0.1.0"}}}'
 ACCOUNT="$(id -un)"
 

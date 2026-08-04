@@ -22,7 +22,7 @@ done
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 CA_CERT="$PLUGIN_DIR/assets/arcpy-mcp-ca.crt"
-HEALTH_URL="https://192.168.25.228:8765/healthz"
+HEALTH_URL="https://192.168.50.170:8765/healthz"
 MARKETPLACE_SOURCE="git@github.com:zhouning/codex-arcpy-mcp-plugin.git"
 MARKETPLACE_NAME="zhouning-arcpy"
 SERVICE_NAME="codex-arcpy-mcp"

@@ -1,7 +1,7 @@
 # Codex ArcPy MCP Plugin
 
 Private Codex plugin for the ArcPy MCP service at
-`https://192.168.25.228:8765/mcp`.
+`https://192.168.50.170:8765/mcp`.
 
 The plugin connects macOS Codex to the allowlisted ArcPy service running on
 the Windows ArcGIS Pro host. It does not expose arbitrary Python, shell, or
@@ -9,7 +9,7 @@ ArcPy callable execution.
 
 ## Prerequisites
 
-- macOS can route to `192.168.25.228:8765` through the private LAN or VPN.
+- macOS can route to `192.168.50.170:8765` through the private LAN or VPN.
 - GitHub SSH access can clone `zhouning/codex-arcpy-mcp-plugin`.
 - Codex CLI 0.144.1 or newer is installed on macOS.
 - The Windows ArcPy MCP service reports healthy.
@@ -103,7 +103,7 @@ or raster processing.
 
 ## Troubleshooting Order
 
-1. Confirm private routing to `192.168.25.228:8765`.
+1. Confirm private routing to `192.168.50.170:8765`.
 2. Confirm the Windows service responds at `/healthz`.
 3. Run `verify-connection.sh` and resolve certificate or Keychain errors.
 4. Confirm `arcpy-mcp` appears in `codex plugin list`.

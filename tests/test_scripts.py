@@ -1,3 +1,4 @@
+import hashlib
 from pathlib import Path
 
 
@@ -5,11 +6,16 @@ ROOT = Path(__file__).parents[1]
 PLUGIN = ROOT / "plugins/arcpy-mcp"
 CONFIGURE = PLUGIN / "scripts/configure-macos.sh"
 VERIFY = PLUGIN / "scripts/verify-connection.sh"
+REPLACEMENT_CA_SHA256 = (
+    "3d875f739f3200e8cb6e351e0c2c6976d3686de11dd7e915fe069ee8535957cd"
+)
 
 
-def test_ca_asset_contains_only_a_public_certificate():
-    certificate = (PLUGIN / "assets/arcpy-mcp-ca.crt").read_text(encoding="ascii")
+def test_ca_asset_contains_only_the_replacement_public_certificate():
+    certificate_bytes = (PLUGIN / "assets/arcpy-mcp-ca.crt").read_bytes()
+    certificate = certificate_bytes.decode("ascii")
 
+    assert hashlib.sha256(certificate_bytes).hexdigest() == REPLACEMENT_CA_SHA256
     assert certificate.count("BEGIN CERTIFICATE") == 1
     assert certificate.count("END CERTIFICATE") == 1
     assert "PRIVATE KEY" not in certificate
@@ -26,7 +32,7 @@ def test_configure_script_uses_keychain_launchagent_and_private_marketplace():
         "codex plugin marketplace add",
         "git@github.com:zhouning/codex-arcpy-mcp-plugin.git",
         "codex plugin add arcpy-mcp@zhouning-arcpy",
-        "https://192.168.25.228:8765/healthz",
+        "https://192.168.50.170:8765/healthz",
         "--rotate-token",
     ]
     for phrase in required:
@@ -50,8 +56,8 @@ def test_verify_script_checks_each_layer_without_dumping_secrets():
         "security find-generic-password",
         "launchctl setenv ARCPY_MCP_TOKEN",
         "security verify-cert",
-        "https://192.168.25.228:8765/healthz",
-        "https://192.168.25.228:8765/mcp",
+        "https://192.168.50.170:8765/healthz",
+        "https://192.168.50.170:8765/mcp",
         "Authorization: Bearer %s",
         '"method":"initialize"',
         "--config <(printf",

@@ -26,7 +26,7 @@ def test_mcp_uses_fixed_ip_and_environment_token():
 
     assert server == {
         "type": "http",
-        "url": "https://192.168.25.228:8765/mcp",
+        "url": "https://192.168.50.170:8765/mcp",
         "bearer_token_env_var": "ARCPY_MCP_TOKEN",
     }
 
@@ -71,7 +71,7 @@ def test_readme_documents_install_update_rotation_and_removal():
         "configure-macos.sh --rotate-token",
         "codex plugin remove arcpy-mcp@zhouning-arcpy",
         "codex plugin marketplace remove zhouning-arcpy",
-        "https://192.168.25.228:8765/mcp",
+        "https://192.168.50.170:8765/mcp",
         "macOS acceptance is pending",
     ]
     for phrase in required:
