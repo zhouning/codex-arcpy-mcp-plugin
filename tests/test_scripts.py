@@ -49,6 +49,46 @@ def test_configure_script_uses_keychain_launchagent_and_private_marketplace():
         assert phrase not in text
 
 
+def test_configure_script_refreshes_ca_without_touching_token():
+    text = CONFIGURE.read_text(encoding="utf-8")
+
+    required = [
+        "--refresh-ca",
+        'LEGACY_CA_SHA1="609AD1A4FD4707958587A7C2B4E1DBDEA87F5800"',
+        'CURRENT_CA_SHA1="33FB760A998BE34BE3A7972290AD49C15F1E886F"',
+        "security find-certificate",
+        "security delete-certificate",
+        "security add-trusted-cert",
+        "refresh_ca",
+        "refresh_plugin",
+    ]
+    for phrase in required:
+        assert phrase in text
+
+    case_body = text.rsplit('case "$MODE" in', maxsplit=1)[1].split(
+        "esac", maxsplit=1
+    )[0]
+    install_branch = case_body.split("install)", maxsplit=1)[1].split(
+        ";;", maxsplit=1
+    )[0]
+    rotate_branch = case_body.split("--rotate-token)", maxsplit=1)[1].split(
+        ";;", maxsplit=1
+    )[0]
+    refresh_branch = case_body.split("--refresh-ca)", maxsplit=1)[1].split(
+        ";;", maxsplit=1
+    )[0]
+    assert "store_token" in install_branch
+    assert "install_token_loader" in install_branch
+    assert "refresh_ca" in install_branch
+    assert "refresh_plugin" in install_branch
+    assert "store_token" in rotate_branch
+    assert "install_token_loader" in rotate_branch
+    assert "refresh_ca" in refresh_branch
+    assert "refresh_plugin" in refresh_branch
+    assert "store_token" not in refresh_branch
+    assert "install_token_loader" not in refresh_branch
+
+
 def test_verify_script_checks_each_layer_without_dumping_secrets():
     text = VERIFY.read_text(encoding="utf-8")
 

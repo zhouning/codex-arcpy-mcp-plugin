@@ -7,12 +7,15 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
 fi
 
 MODE="${1:-install}"
-if [[ "$MODE" != "install" && "$MODE" != "--rotate-token" ]]; then
-  printf 'Usage: %s [--rotate-token]\n' "$0" >&2
-  exit 2
-fi
+case "$MODE" in
+  install|--rotate-token|--refresh-ca) ;;
+  *)
+    printf 'Usage: %s [--rotate-token|--refresh-ca]\n' "$0" >&2
+    exit 2
+    ;;
+esac
 
-for required_command in codex git security launchctl curl grep id; do
+for required_command in codex git security launchctl curl grep id tr; do
   command -v "$required_command" >/dev/null || {
     printf 'Missing command: %s\n' "$required_command" >&2
     exit 1
@@ -32,6 +35,8 @@ LOADER="$LAUNCH_DIR/load-token.sh"
 LAUNCH_LABEL="com.zhouning.arcpy-mcp-token"
 PLIST="$HOME/Library/LaunchAgents/$LAUNCH_LABEL.plist"
 LOGIN_KEYCHAIN="$HOME/Library/Keychains/login.keychain-db"
+LEGACY_CA_SHA1="609AD1A4FD4707958587A7C2B4E1DBDEA87F5800"
+CURRENT_CA_SHA1="33FB760A998BE34BE3A7972290AD49C15F1E886F"
 
 if [[ ! -f "$CA_CERT" ]]; then
   printf 'Missing CA certificate: %s\n' "$CA_CERT" >&2
@@ -101,13 +106,39 @@ PLIST
   "$LOADER"
 }
 
-install_plugin() {
-  security add-trusted-cert \
-    -r trustRoot \
-    -p ssl \
-    -k "$LOGIN_KEYCHAIN" \
-    "$CA_CERT"
+ca_present() {
+  local fingerprint="$1"
 
+  security find-certificate -a -Z "$LOGIN_KEYCHAIN" 2>/dev/null \
+    | tr '[:lower:]' '[:upper:]' \
+    | grep -Fq "$fingerprint"
+}
+
+refresh_ca() {
+  if ca_present "$LEGACY_CA_SHA1"; then
+    if ! security delete-certificate \
+      -Z "$LEGACY_CA_SHA1" \
+      "$LOGIN_KEYCHAIN" >/dev/null; then
+      printf 'Failed to remove the legacy ArcPy MCP CA.\n' >&2
+      return 1
+    fi
+  fi
+
+  if ! ca_present "$CURRENT_CA_SHA1"; then
+    security add-trusted-cert \
+      -r trustRoot \
+      -p ssl \
+      -k "$LOGIN_KEYCHAIN" \
+      "$CA_CERT"
+  fi
+
+  if ! ca_present "$CURRENT_CA_SHA1"; then
+    printf 'The replacement ArcPy MCP CA is not installed.\n' >&2
+    return 1
+  fi
+}
+
+refresh_plugin() {
   if codex plugin marketplace list | grep -Fq "$MARKETPLACE_NAME"; then
     codex plugin marketplace upgrade "$MARKETPLACE_NAME"
   else
@@ -116,12 +147,22 @@ install_plugin() {
   codex plugin add arcpy-mcp@zhouning-arcpy
 }
 
-store_token
-install_token_loader
-
-if [[ "$MODE" == "install" ]]; then
-  install_plugin
-fi
+case "$MODE" in
+  install)
+    store_token
+    install_token_loader
+    refresh_ca
+    refresh_plugin
+    ;;
+  --rotate-token)
+    store_token
+    install_token_loader
+    ;;
+  --refresh-ca)
+    refresh_ca
+    refresh_plugin
+    ;;
+esac
 
 curl \
   --fail \
