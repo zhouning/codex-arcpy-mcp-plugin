@@ -67,6 +67,26 @@ codex plugin add arcpy-mcp@zhouning-arcpy
 Restart Codex and use a new thread after an update so the new Skill and MCP
 configuration are loaded.
 
+## Migrate The Host And CA
+
+When the Windows host or local CA changes, update the checkout and refresh the
+client trust and plugin registration:
+
+```bash
+git -C codex-arcpy-mcp-plugin pull --ff-only
+./codex-arcpy-mcp-plugin/plugins/arcpy-mcp/scripts/configure-macos.sh --refresh-ca
+./codex-arcpy-mcp-plugin/plugins/arcpy-mcp/scripts/verify-connection.sh
+```
+
+The refresh removes only the known legacy CA fingerprint, imports the bundled
+replacement CA into the login Keychain, and reinstalls the plugin configuration.
+The Bearer Token does not change and the command does not read or rewrite it.
+
+Restart Codex and open a new thread after the refresh. Signed artifact download
+URLs contain the issuing host, so URLs created before this migration are no
+longer valid. Do not rewrite or reuse a signed URL issued for the old host; keep
+the artifact ID and call `create_download` again.
+
 ## Rotate The Bearer Token
 
 Rotate the static token on the Windows server and restart the ArcPy MCP

@@ -54,6 +54,8 @@ def test_skill_contains_required_safety_and_workflow_rules():
         "Never request arbitrary Python execution",
         "artifact-relative paths",
         "CPU deep-learning",
+        "call `create_download` again",
+        "Never rewrite the hostname of a signed URL",
     ]
     for phrase in required:
         assert phrase in skill
@@ -73,6 +75,10 @@ def test_readme_documents_install_update_rotation_and_removal():
         "codex plugin marketplace remove zhouning-arcpy",
         "https://192.168.50.170:8765/mcp",
         "macOS acceptance is pending",
+        "configure-macos.sh --refresh-ca",
+        "The Bearer Token does not change",
+        "call `create_download` again",
+        "Do not rewrite or reuse a signed URL issued for the old host",
     ]
     for phrase in required:
         assert phrase in readme

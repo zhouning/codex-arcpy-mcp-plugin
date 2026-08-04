@@ -56,8 +56,9 @@ Use the `arcpy` MCP server for ArcGIS Pro work that cannot run locally on macOS.
 1. Read result artifact IDs only from a succeeded job response.
 2. Call `create_download` for each result artifact.
 3. Download with `curl --fail --location --continue-at -` and the returned signed HTTPS URL.
-4. Verify the downloaded file against the artifact `actual_sha256` with `shasum -a 256` before extracting or opening it.
-5. Keep ZIP extraction inside the current macOS workspace and reject archive paths that escape it.
+4. If a signed URL was issued for a different host or has expired, discard it and call `create_download` again. Never rewrite the hostname of a signed URL.
+5. Verify the downloaded file against the artifact `actual_sha256` with `shasum -a 256` before extracting or opening it.
+6. Keep ZIP extraction inside the current macOS workspace and reject archive paths that escape it.
 
 ## Deep Learning
 
