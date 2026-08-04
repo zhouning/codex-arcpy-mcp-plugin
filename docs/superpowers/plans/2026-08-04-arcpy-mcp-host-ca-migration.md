@@ -474,7 +474,7 @@ Run:
 python -m pytest -v
 ```
 
-Expected: 10 tests pass.
+Expected: 11 tests pass.
 
 - [ ] **Step 2: Parse both macOS scripts with Bash**
 
